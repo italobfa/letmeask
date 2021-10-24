@@ -5,16 +5,26 @@ import "../styles/auth.scss";
 import { Button } from "../components/Button";
 import { Link } from "react-router-dom";
 import { FormEvent, useState } from "react";
-/* import { useAuth } from "../hooks/useAuth"; */
+import { database } from "../services/firebase";
+import { useAuth } from "../hooks/useAuth";
 
 export function NewRoom() {
-  /*   const { user } = useAuth() */
+  const { user } = useAuth() 
   const [newRoom, setNewRoom] = useState('');
 
   async function handleCreateRoom(event: FormEvent) {
     event.preventDefault();
+    //prevenir que a sala esteja sem nome
+    if(newRoom.trim() === '') {
+      return
+    }
 
-    console.log(newRoom);
+    const roomRef = database.ref('rooms')
+
+    const firebaseRoom = roomRef.push({
+      tittle: newRoom,
+      authorId: user?.id,
+    })
   }
 
   return (
