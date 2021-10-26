@@ -12,7 +12,7 @@ type ParamsProps = {
 };
 
 export function Room() {
-  const {user} = useAuth()
+  const { user } = useAuth();
   const params = useParams<ParamsProps>();
   const roomId = params.id;
   const [newQuestion, setNewQuestion] = useState("");
@@ -24,24 +24,24 @@ export function Room() {
       return;
     }
 
-    if(!user){
-      throw new Error("Você precisa estar logado")
+    if (!user) {
+      throw new Error("Você precisa estar logado");
     }
 
     const question = {
       content: newQuestion,
-      author:{
+      author: {
         name: user.name,
         avatar: user.avatar,
       },
 
       isHighlighted: false,
       isAnswered: false,
-    }
+    };
 
     await database.ref(`rooms/${roomId}/questions`).push(question);
 
-    setNewQuestion('')
+    setNewQuestion("");
   }
 
   return (
@@ -59,17 +59,26 @@ export function Room() {
           <span>4 perguntas</span>
         </div>
 
-        <form onSubmit={handleSendQuestion} >
+        <form onSubmit={handleSendQuestion}>
           <textarea
             placeholder="Digite sua pergunta"
             onChange={(event) => setNewQuestion(event.target.value)}
             value={newQuestion}
           />
           <div className="form-footer">
-            <span>
-              Para enviar uma pergunta, <button>faça seu login</button>
-            </span>
-            <Button type="submit" disabled={!user} >Enviar pergunta</Button>
+            { user ? (
+              <div className="user-info">
+                <img src={user.avatar} alt={user.name}/>
+                <span>{user.name}</span>
+              </div>
+            ) : (
+              <span>
+                Para enviar uma pergunta, <button>faça seu login</button>
+              </span>
+            )}
+            <Button type="submit" disabled={!user}>
+              Enviar pergunta
+            </Button>
           </div>
         </form>
       </main>
