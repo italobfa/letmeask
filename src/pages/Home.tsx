@@ -37,7 +37,7 @@ export function Home() {
       return
     }
 
-    if(roomRef.val().endedAt){
+    if(roomRef.val().closedAt){
       alert('Sala encerrada')
       return
     }
