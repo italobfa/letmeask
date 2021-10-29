@@ -21,7 +21,6 @@ export function Question({ content, author, children }: QuestionProps) {
         </div>
         <div>{children}</div>
       </footer>
-      
     </div>
   );
 }
