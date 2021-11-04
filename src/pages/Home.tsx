@@ -1,5 +1,7 @@
 import { FormEvent, useState } from "react";
 import { useHistory } from "react-router-dom";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import googleIconImg from "../assets/images/google-icon.svg";
 import illustrationImg from "../assets/images/illustration.svg";
 import logoImg from "../assets/images/logo.svg";
@@ -7,8 +9,6 @@ import { Button } from "../components/Button";
 import { useAuth } from "../hooks/useAuth";
 import { database } from "../services/firebase";
 import "../styles/auth.scss";
-
-
 
 export function Home() {
   const history = useHistory();
@@ -26,27 +26,36 @@ export function Home() {
   async function handleJoinRoom(event: FormEvent) {
     event.preventDefault();
 
-    if(roomCode.trim() === "") {
-      return
+    if (roomCode.trim() === "") {
+      return;
     }
 
-    const roomRef = await database.ref(`/rooms/${roomCode}`).get()
+    const roomRef = await database.ref(`/rooms/${roomCode}`).get();
 
-    if(!roomRef.exists()){
-      alert('Sala não existe')
-      return
+    if (!roomRef.exists()) {
+      toast.error("Sala não existe", {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
+      return;
     }
 
-    if(roomRef.val().closedAt){
-      alert('Sala encerrada')
-      return
+    if (roomRef.val().closedAt) {
+      alert("Sala encerrada");
+      return;
     }
 
-    history.push(`/rooms/${roomCode}`)
+    history.push(`/rooms/${roomCode}`);
   }
 
   return (
     <div id="page-auth">
+      <ToastContainer />
       <aside>
         <img src={illustrationImg} alt="Ilustração de perguntas e respostas" />
         <strong>Crie salas de Q&amp;A ao-vivo</strong>
